@@ -1,0 +1,34 @@
+services:
+  new-api:
+    image: calciumion/new-api:latest
+    container_name: new-api
+    restart: unless-stopped
+    depends_on:
+      - redis
+    ports:
+      - "127.0.0.1:3000:3000"
+    environment:
+      TZ: Asia/Shanghai
+      SESSION_SECRET: CHANGE_ME
+      CRYPTO_SECRET: CHANGE_ME
+      REDIS_CONN_STRING: redis://redis:6379
+    volumes:
+      - ./data:/data
+    networks:
+      - default
+      - ai-gateway
+
+  redis:
+    image: redis:7-alpine
+    container_name: new-api-redis
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - ./redis-data:/data
+    networks:
+      - default
+
+networks:
+  ai-gateway:
+    external: true
+    name: ai-gateway

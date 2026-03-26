@@ -1,0 +1,61 @@
+panel.model-port.xyz {
+	handle /brand-logo.svg {
+		root * /opt/new-api/branding
+		file_server
+	}
+
+	handle /mesh-hero.svg {
+		root * /opt/new-api/branding
+		file_server
+	}
+
+	handle /guide {
+		root * /opt/new-api/branding
+		rewrite * /guide.html
+		file_server
+	}
+
+	handle /guide.html {
+		root * /opt/new-api/branding
+		file_server
+	}
+
+	@app_shell path /login /login/* /register /register/* /pricing /pricing/* /about /about/* /console /console/* /topup /topup/* /personal /personal/* /token /token/*
+	handle @app_shell {
+		root * /opt/new-api/branding
+		rewrite * /panel-index.html
+		file_server
+	}
+
+	handle /api/* {
+		reverse_proxy 127.0.0.1:3000 {
+			flush_interval -1
+		}
+	}
+
+	handle /assets/* {
+		reverse_proxy 127.0.0.1:3000 {
+			flush_interval -1
+		}
+	}
+
+	handle /logo.png {
+		root * /opt/new-api/branding
+		rewrite * /brand-logo.svg
+		header Content-Type image/svg+xml
+		file_server
+	}
+
+	@home path /
+	handle @home {
+		root * /opt/new-api/branding
+		rewrite * /landing.html
+		file_server
+	}
+
+	handle {
+		root * /opt/new-api/branding
+		rewrite * /panel-index.html
+		file_server
+	}
+}

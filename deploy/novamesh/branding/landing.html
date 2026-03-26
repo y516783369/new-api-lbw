@@ -1,0 +1,547 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <link rel="icon" type="image/svg+xml" href="/novamesh-favicon-v3.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>NovaMesh AI | 统一模型网关</title>
+  <meta name="description" content="NovaMesh AI 为团队和客户提供统一的 OpenAI 兼容模型接入、密钥分发、调用统计与客户门户。" />
+  <style>
+    :root {
+      --bg: #07101d;
+      --panel: rgba(11, 23, 42, 0.78);
+      --panel-strong: #0e1930;
+      --line: rgba(123, 160, 212, 0.22);
+      --text: #f4f8ff;
+      --muted: #9fb5d6;
+      --cyan: #48ddff;
+      --blue: #6e90ff;
+      --violet: #ba72ff;
+      --accent: linear-gradient(135deg, #3ce0ff 0%, #6e90ff 55%, #ba72ff 100%);
+      --shadow: 0 24px 80px rgba(0, 0, 0, 0.32);
+      color-scheme: dark;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; background: radial-gradient(circle at top left, #123154 0%, var(--bg) 42%), var(--bg); color: var(--text); font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; }
+    a { color: inherit; text-decoration: none; }
+
+    .shell {
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+      background:
+        radial-gradient(circle at 18% 18%, rgba(60, 224, 255, 0.12), transparent 26%),
+        radial-gradient(circle at 82% 12%, rgba(186, 114, 255, 0.14), transparent 28%),
+        linear-gradient(180deg, rgba(255,255,255,0.02), transparent 22%);
+    }
+
+    .shell::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(113, 145, 194, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(113, 145, 194, 0.05) 1px, transparent 1px);
+      background-size: 48px 48px;
+      mask-image: linear-gradient(180deg, rgba(0,0,0,0.55), transparent 88%);
+      pointer-events: none;
+    }
+
+    .container {
+      width: min(1180px, calc(100% - 48px));
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 22px 0;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+
+    .brand img { width: 42px; height: 42px; border-radius: 12px; }
+    .brand span { font-size: 21px; }
+
+    .nav {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .nav a, .nav button {
+      border: 1px solid rgba(120, 151, 207, 0.18);
+      background: rgba(255,255,255,0.03);
+      color: var(--text);
+      padding: 11px 16px;
+      border-radius: 999px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: transform .2s ease, border-color .2s ease, background .2s ease;
+    }
+
+    .nav a:hover, .nav button:hover { transform: translateY(-1px); border-color: rgba(72,221,255,0.45); background: rgba(255,255,255,0.06); }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 36px;
+      align-items: center;
+      padding: 34px 0 52px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 14px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(72,221,255,0.16);
+      border-radius: 999px;
+      color: #d7f6ff;
+      font-size: 13px;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      margin: 0 0 16px;
+      font-size: clamp(40px, 6vw, 72px);
+      line-height: 0.98;
+      letter-spacing: -0.04em;
+    }
+
+    .hero p {
+      margin: 0;
+      max-width: 630px;
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1.85;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin: 28px 0 32px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px 22px;
+      border-radius: 16px;
+      font-weight: 700;
+      border: 1px solid transparent;
+      transition: transform .18s ease, filter .18s ease, border-color .18s ease;
+    }
+
+    .btn:hover { transform: translateY(-2px); filter: brightness(1.03); }
+    .btn-primary { background: var(--accent); color: #05111f; }
+    .btn-secondary { border-color: rgba(125, 155, 212, 0.2); background: rgba(255,255,255,0.03); color: var(--text); }
+
+    .hero-metrics {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(120px, 1fr));
+      gap: 14px;
+    }
+
+    .metric {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 18px 18px 20px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+    }
+
+    .metric strong {
+      display: block;
+      font-size: 28px;
+      margin-bottom: 10px;
+      letter-spacing: -0.03em;
+    }
+
+    .metric span { color: var(--muted); font-size: 14px; line-height: 1.6; display: block; }
+
+    .visual {
+      background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+      border: 1px solid var(--line);
+      border-radius: 32px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+    }
+
+    .visual img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 24px;
+    }
+
+    section {
+      padding: 20px 0 34px;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      align-items: end;
+      margin-bottom: 22px;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      font-size: 32px;
+      letter-spacing: -0.03em;
+    }
+
+    .section-head p {
+      margin: 0;
+      max-width: 560px;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .card {
+      min-height: 220px;
+      padding: 24px;
+      border-radius: 24px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+    }
+
+    .card .tag {
+      display: inline-flex;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.06);
+      color: #dff8ff;
+      font-size: 12px;
+      margin-bottom: 18px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .card h3 {
+      margin: 0 0 12px;
+      font-size: 22px;
+    }
+
+    .card p, .card li {
+      color: var(--muted);
+      line-height: 1.8;
+      font-size: 15px;
+    }
+
+    .quickstart {
+      display: grid;
+      grid-template-columns: 0.95fr 1.05fr;
+      gap: 18px;
+    }
+
+    .panel, .code {
+      border-radius: 26px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .panel { padding: 26px; }
+    .panel h3, .code h3 { margin: 0 0 12px; font-size: 22px; }
+    .panel p { color: var(--muted); line-height: 1.8; }
+
+    .checklist {
+      padding: 0;
+      margin: 18px 0 0;
+      list-style: none;
+      display: grid;
+      gap: 12px;
+    }
+
+    .checklist li {
+      display: flex;
+      align-items: start;
+      gap: 10px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: var(--accent);
+      margin-top: 9px;
+      flex: 0 0 auto;
+    }
+
+    .code header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 18px 22px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      background: rgba(255,255,255,0.03);
+    }
+
+    .code header span { color: var(--muted); font-size: 13px; }
+    pre {
+      margin: 0;
+      padding: 22px;
+      overflow: auto;
+      font-size: 14px;
+      line-height: 1.75;
+      color: #dff5ff;
+      background: linear-gradient(180deg, rgba(2,8,18,0.55), rgba(7,16,29,0.92));
+    }
+
+    .portal {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .portal .card { min-height: unset; }
+
+    .footer {
+      padding: 40px 0 58px;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      margin-top: 18px;
+    }
+
+    .footer a { color: #dff7ff; }
+
+    @media (max-width: 1024px) {
+      .hero, .quickstart { grid-template-columns: 1fr; }
+      .cards, .portal { grid-template-columns: 1fr; }
+      .section-head { flex-direction: column; align-items: start; }
+    }
+
+    @media (max-width: 680px) {
+      .container { width: min(100% - 28px, 1180px); }
+      .topbar { align-items: start; flex-direction: column; }
+      .hero-metrics { grid-template-columns: 1fr; }
+      .nav { width: 100%; }
+      .nav a { flex: 1 1 auto; text-align: center; }
+      h1 { font-size: 42px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <div class="container">
+      <header class="topbar">
+        <a class="brand" href="/">
+          <img src="/novamesh-mark.svg?v=2" alt="NovaMesh AI" />
+          <span>NovaMesh AI</span>
+        </a>
+        <nav class="nav">
+          <a href="/guide">接入文档</a>
+          <a href="/pricing">模型广场</a>
+          <a href="/login">客户登录</a>
+          <a href="/register">快速注册</a>
+        </nav>
+      </header>
+
+      <section class="hero">
+        <div>
+          <div class="eyebrow">UNIFIED AI ACCESS LAYER</div>
+          <h1>把模型接入、客户分发和调用统计，收敛到一个入口。</h1>
+          <p>
+            NovaMesh AI 面向团队和客户场景，提供 OpenAI 兼容 API、客户门户、令牌分发与使用日志。
+            你可以用一个网关同时管理模型访问、额度控制和接入说明，而不是把上游账号直接暴露给终端用户。
+          </p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="/guide">查看接入文档</a>
+            <a class="btn btn-secondary" href="/login">进入客户控制台</a>
+          </div>
+          <div class="hero-metrics">
+            <div class="metric">
+              <strong>13</strong>
+              <span>已接入的模型能力，统一由 OpenAI 兼容网关暴露。</span>
+            </div>
+            <div class="metric">
+              <strong>/v1</strong>
+              <span>标准接口前缀，便于 VS Code、脚本、客户端直接迁移。</span>
+            </div>
+            <div class="metric">
+              <strong>Portal</strong>
+              <span>客户可登录查看额度、令牌、使用日志和接入说明。</span>
+            </div>
+          </div>
+        </div>
+        <div class="visual">
+          <img src="/mesh-hero.svg" alt="NovaMesh AI gateway illustration" />
+        </div>
+      </section>
+
+      <section>
+        <div class="section-head">
+          <div>
+            <h2>首页结构参考了什么</h2>
+          </div>
+          <p>
+            我按同类型平台常见的信息组织方式来做：首页先回答“这是什么、怎么接、为什么可信”，再给出立即可复制的调用入口和客户门户入口。
+          </p>
+        </div>
+        <div class="cards">
+          <article class="card">
+            <div class="tag">Unified Access</div>
+            <h3>统一 API 入口</h3>
+            <p>
+              参考同类模型聚合平台常见做法，先强调一个兼容入口，而不是先讲内部实现。对客户来说，最重要的是能直接接入。
+            </p>
+          </article>
+          <article class="card">
+            <div class="tag">Visibility</div>
+            <h3>客户看得到额度和日志</h3>
+            <p>
+              参考面向团队的 AI 平台，突出客户侧登录门户，让用户能看到自己的令牌、剩余额度和消费记录，而不是只收到一串 key。
+            </p>
+          </article>
+          <article class="card">
+            <div class="tag">Fast Start</div>
+            <h3>首页就给接入路径</h3>
+            <p>
+              参考文档型平台首页，首页不堆参数表，而是放最短路径：Base URL、文档入口、客户登录入口和可复制示例。
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section>
+        <div class="section-head">
+          <div>
+            <h2>核心能力</h2>
+          </div>
+          <p>
+            这部分给第一次进入站点的客户一个完整认知：你不只是一个裸 API 地址，而是一套可运营、可分发、可追踪的模型接入层。
+          </p>
+        </div>
+        <div class="cards">
+          <article class="card">
+            <div class="tag">Gateway</div>
+            <h3>OpenAI 兼容接入</h3>
+            <p>
+              直接对接标准的 <code>/v1/models</code> 和 <code>/v1/chat/completions</code>，适合脚本、客户端、编辑器插件和现有网关迁移。
+            </p>
+          </article>
+          <article class="card">
+            <div class="tag">Client Portal</div>
+            <h3>客户独立控制台</h3>
+            <p>
+              每个客户可以登录前台查看自己的令牌、额度余额、消费日志和使用说明，减少人工支持成本。
+            </p>
+          </article>
+          <article class="card">
+            <div class="tag">Operations</div>
+            <h3>运营层可控</h3>
+            <p>
+              你可以在后台按用户分发 token、设置额度、查看调用记录，再把上游模型能力统一藏在网关后面。
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section>
+        <div class="section-head">
+          <div>
+            <h2>快速接入</h2>
+          </div>
+          <p>
+            文档页会给完整说明，但首页先保留最短可用路径，方便客户确认接口结构和字段。
+          </p>
+        </div>
+        <div class="quickstart">
+          <div class="panel">
+            <h3>接入信息</h3>
+            <p>程序调用统一走 API 域名，客户登录和令牌管理走门户域名。</p>
+            <ul class="checklist">
+              <li><span class="dot"></span><span>API Base URL：<code>https://api.model-port.xyz/v1</code></span></li>
+              <li><span class="dot"></span><span>客户门户：<code>https://panel.model-port.xyz</code></span></li>
+              <li><span class="dot"></span><span>建议先用 <code>gpt-5</code> 或 <code>gpt-5.4</code> 做首轮联调。</span></li>
+              <li><span class="dot"></span><span>详细模型列表、PowerShell / CMD / Bash 示例请看文档页。</span></li>
+            </ul>
+          </div>
+          <div class="code">
+            <header>
+              <h3>模型列表测试</h3>
+              <span>cURL Example</span>
+            </header>
+            <pre>curl https://api.model-port.xyz/v1/models \
+  -H "Authorization: Bearer YOUR_API_KEY"</pre>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="section-head">
+          <div>
+            <h2>客户入口</h2>
+          </div>
+          <p>
+            把客户能做什么写清楚，能显著降低“token 发出去后还要重复解释”的沟通成本。
+          </p>
+        </div>
+        <div class="portal">
+          <article class="card">
+            <div class="tag">For Clients</div>
+            <h3>登录后可以看到</h3>
+            <p>
+              当前余额、令牌列表、可用模型、历史调用日志、消费记录，以及你准备好的接入说明。
+            </p>
+          </article>
+          <article class="card">
+            <div class="tag">For Teams</div>
+            <h3>适合怎么发给客户</h3>
+            <p>
+              给客户两个入口即可：一个是 API 调用地址，一个是客户门户地址。调用和查看数据分开，体验更清晰。
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <div>© 2026 NovaMesh AI. Unified AI Gateway Platform.</div>
+        <div>
+          <a href="/guide">文档</a>
+          <span> · </span>
+          <a href="/login">客户登录</a>
+          <span> · </span>
+          <a href="/pricing">模型广场</a>
+        </div>
+      </footer>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<div style="max-width:1080px;margin:40px auto 56px;padding:0 8px;color:#0f172a;">
+  <div style="padding:34px 36px;border-radius:28px;background:linear-gradient(135deg,#0b1b34 0%,#122345 55%,#161f46 100%);color:#f8fbff;box-shadow:0 24px 80px rgba(15,23,42,.16);">
+    <div style="display:inline-block;padding:8px 14px;border-radius:999px;background:rgba(255,255,255,.08);font-size:12px;letter-spacing:.08em;text-transform:uppercase;">NovaMesh AI</div>
+    <h1 style="margin:16px 0 14px;font-size:42px;line-height:1.08;">统一模型网关与客户工作台</h1>
+    <p style="margin:0;max-width:760px;font-size:17px;line-height:1.9;color:rgba(255,255,255,.82);">在一个入口里管理 API 分发、客户令牌、消费日志和模型接入说明。你可以把上游能力收敛到标准 OpenAI 兼容接口，同时给客户提供独立的登录门户。</p>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:24px;">
+      <a href="/guide" style="display:inline-block;padding:12px 18px;border-radius:14px;background:#ffffff;color:#0f172a;font-weight:700;text-decoration:none;">查看接入文档</a>
+      <a href="/token" style="display:inline-block;padding:12px 18px;border-radius:14px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:#ffffff;font-weight:700;text-decoration:none;">查看我的令牌</a>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;margin-top:22px;">
+    <div style="padding:22px 24px;border-radius:22px;background:#ffffff;border:1px solid rgba(148,163,184,.24);box-shadow:0 16px 44px rgba(15,23,42,.07);">
+      <div style="font-size:13px;color:#64748b;text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px;">API Base</div>
+      <div style="font-size:18px;font-weight:700;color:#0f172a;">https://api.model-port.xyz/v1</div>
+      <p style="margin:12px 0 0;color:#475569;line-height:1.8;">所有程序调用统一走这一个 OpenAI 兼容入口。</p>
+    </div>
+    <div style="padding:22px 24px;border-radius:22px;background:#ffffff;border:1px solid rgba(148,163,184,.24);box-shadow:0 16px 44px rgba(15,23,42,.07);">
+      <div style="font-size:13px;color:#64748b;text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px;">Client Portal</div>
+      <div style="font-size:18px;font-weight:700;color:#0f172a;">门户、额度、日志</div>
+      <p style="margin:12px 0 0;color:#475569;line-height:1.8;">登录后可以查看自己的余额、令牌、使用日志和接入说明。</p>
+    </div>
+    <div style="padding:22px 24px;border-radius:22px;background:#ffffff;border:1px solid rgba(148,163,184,.24);box-shadow:0 16px 44px rgba(15,23,42,.07);">
+      <div style="font-size:13px;color:#64748b;text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px;">Recommended</div>
+      <div style="font-size:18px;font-weight:700;color:#0f172a;">gpt-5 / gpt-5.4</div>
+      <p style="margin:12px 0 0;color:#475569;line-height:1.8;">第一次联调建议优先用这两组模型验证链路和配额消耗。</p>
+    </div>
+  </div>
+
+  <div style="display:flex;gap:18px;flex-wrap:nowrap;margin-top:18px;align-items:stretch;">
+    <div style="flex:1 1 0;padding:26px;border-radius:24px;background:#ffffff;border:1px solid rgba(148,163,184,.24);box-shadow:0 16px 44px rgba(15,23,42,.07);display:flex;flex-direction:column;justify-content:space-between;min-height:320px;min-width:0;">
+      <div>
+        <h2 style="margin:0 0 14px;font-size:26px;color:#0f172a;">你现在可以做什么</h2>
+        <div style="display:grid;gap:14px;color:#475569;line-height:1.85;">
+          <div><strong style="color:#0f172a;">查看账户数据</strong><br/>在控制台查看自己的余额、调用次数和 Token 消耗。</div>
+          <div><strong style="color:#0f172a;">管理自己的令牌</strong><br/>在令牌管理里复制 API Key，分配给脚本、插件或客户端。</div>
+          <div><strong style="color:#0f172a;">复核调用日志</strong><br/>在使用日志里核对模型、请求时间、成本和调用来源。</div>
+          <div><strong style="color:#0f172a;">查接入示例</strong><br/>通过接入文档获取 PowerShell、CMD、Bash、Python 的标准调用方式。</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="flex:1 1 0;padding:26px;border-radius:24px;background:#ffffff;border:1px solid rgba(148,163,184,.24);box-shadow:0 16px 44px rgba(15,23,42,.07);display:flex;flex-direction:column;justify-content:space-between;min-height:320px;min-width:0;">
+      <div>
+        <h2 style="margin:0 0 14px;font-size:26px;color:#0f172a;">快速提醒</h2>
+        <div style="display:grid;gap:16px;color:#475569;line-height:1.85;">
+          <div><strong style="color:#0f172a;">Base URL</strong><br/>请填写到 /v1 这一层，不要填到根域名。</div>
+          <div><strong style="color:#0f172a;">Windows 测试</strong><br/>PowerShell 建议优先使用 Invoke-RestMethod。</div>
+          <div><strong style="color:#0f172a;">模型选择</strong><br/>拉不到模型列表时，先手动填写 gpt-5 或 gpt-5.4 测试。</div>
+          <div><strong style="color:#0f172a;">客户入口</strong><br/>程序调用走 API 域名，额度与令牌查看走当前客户门户。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

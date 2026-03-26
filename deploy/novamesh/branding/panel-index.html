@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="zh">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/novamesh-favicon-v3.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0b1220" />
+    <meta name="description" lang="zh" content="NovaMesh AI ???? AI ??????????" />
+    <meta name="description" lang="en" content="NovaMesh AI is a unified model gateway and collaboration platform for operational AI access." />
+    <title>NovaMesh AI</title>
+    <style>
+      .brand-preload-hide { visibility: hidden; }
+    </style>
+    <script>
+      (function () {
+        var brand = {
+          system_name: 'NovaMesh AI',
+          logo: '/novamesh-mark.svg?v=2',
+          docs_link: 'https://panel.model-port.xyz/guide',
+          footer_html: '<div style="display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:center;width:100%"><span>&copy; 2026 NovaMesh AI. Unified AI Gateway Platform.</span><span>Secure access for your private AI workloads.</span></div>',
+          about_html: '<h2>NovaMesh AI</h2><p>NovaMesh AI is a unified model gateway for teams and clients. It provides access control, token distribution, quota tracking, and usage logs through one managed portal.</p><p>Use one control panel to issue tokens, review consumption, and deliver OpenAI-compatible access with a cleaner operational workflow.</p>'
+        };
+
+        function safeSetStorage() {
+          try {
+            localStorage.setItem('system_name', brand.system_name);
+            localStorage.setItem('logo', brand.logo);
+            localStorage.setItem('docs_link', brand.docs_link);
+            localStorage.setItem('footer_html', brand.footer_html);
+          } catch (e) {}
+        }
+
+        function setTitleAndIcon() {
+          document.title = brand.system_name;
+          var icon = document.querySelector("link[rel~='icon']");
+          if (icon) icon.href = '/novamesh-favicon-v3.svg';
+        }
+
+        function rewriteFooterAndLinks(root) {
+          (root || document).querySelectorAll('a[href="https://github.com/QuantumNous/new-api"]').forEach(function (a) {
+            a.href = brand.docs_link;
+            a.textContent = brand.system_name;
+            if (a.previousElementSibling) {
+              a.previousElementSibling.textContent = 'Platform by';
+            }
+          });
+        }
+
+        function rewriteHeader(root) {
+          (root || document).querySelectorAll('a img[alt="logo"]').forEach(function (img) {
+            img.setAttribute('src', brand.logo);
+          });
+          (root || document).querySelectorAll('img[alt="Logo"]').forEach(function (img) {
+            img.setAttribute('src', brand.logo);
+          });
+          (root || document).querySelectorAll('h3,h4').forEach(function (node) {
+            if (node.textContent && (node.textContent.trim() === 'New API' || node.textContent.trim() === 'new-api')) {
+              node.textContent = brand.system_name;
+            }
+          });
+        }
+
+        function rewriteAbout(root) {
+          var container = Array.from((root || document).querySelectorAll('main h2')).find(function (n) {
+            return /NovaMesh AI|New API/i.test(n.textContent || '');
+          });
+          if (!container) return;
+          var block = container.parentElement;
+          if (!block) return;
+          var text = (block.textContent || '').toLowerCase();
+          if (text.includes('gateway') || text.includes('new api') || text.includes('novamesh')) {
+            block.innerHTML = brand.about_html;
+          }
+        }
+
+        function rewriteEmptyStates(root) {
+          (root || document).querySelectorAll('.semi-empty-image').forEach(function (box) {
+            if (box.getAttribute('data-novamesh-empty') === '1') return;
+            box.setAttribute('data-novamesh-empty', '1');
+            box.innerHTML = '<img src=\"/empty-state-mesh.svg\" alt=\"NovaMesh empty state\" style=\"width:112px;height:auto;display:block;filter:drop-shadow(0 16px 30px rgba(66,120,255,.18));\" />';
+          });
+        }
+
+        function applyBrand(root) {
+          safeSetStorage();
+          setTitleAndIcon();
+          rewriteHeader(root);
+          rewriteFooterAndLinks(root);
+          rewriteAbout(root);
+          rewriteEmptyStates(root);
+          document.documentElement.classList.remove('brand-preload-hide');
+        }
+
+        var scheduled = false;
+        function scheduleApply(root) {
+          if (scheduled) return;
+          scheduled = true;
+          requestAnimationFrame(function () {
+            scheduled = false;
+            applyBrand(root || document);
+          });
+        }
+
+        document.documentElement.classList.add('brand-preload-hide');
+        safeSetStorage();
+        setTitleAndIcon();
+        document.addEventListener('DOMContentLoaded', function () { scheduleApply(document); });
+        var observer = new MutationObserver(function () {
+          scheduleApply(document);
+        });
+        observer.observe(document.documentElement, { childList: true, subtree: true });
+        setInterval(function () { scheduleApply(document); }, 750);
+      })();
+    </script>
+    <script type="module" crossorigin src="/assets/index-De-YXcax.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/react-core-D-iPSUlg.js">
+    <link rel="modulepreload" crossorigin href="/assets/semi-ui-q_syRLCx.js">
+    <link rel="modulepreload" crossorigin href="/assets/i18n-A7Efv4BT.js">
+    <link rel="modulepreload" crossorigin href="/assets/tools-JRq2YJju.js">
+    <link rel="modulepreload" crossorigin href="/assets/react-components-BnylIsR_.js">
+    <link rel="stylesheet" crossorigin href="/assets/semi-ui-yRXI6evF.css">
+    <link rel="stylesheet" crossorigin href="/assets/index-Cvafx_yn.css">
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+  </body>
+</html>

@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <link rel="icon" type="image/svg+xml" href="/novamesh-favicon-v3.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>NovaMesh AI | 接入文档</title>
+  <meta name="description" content="NovaMesh AI 接入文档：API 地址、模型列表、PowerShell/CMD/Bash/Python 示例、客户门户说明。" />
+  <style>
+    :root {
+      --bg: #07101d;
+      --panel: rgba(11, 23, 42, 0.82);
+      --line: rgba(123, 160, 212, 0.18);
+      --text: #f4f8ff;
+      --muted: #9fb5d6;
+      --cyan: #48ddff;
+      --blue: #6e90ff;
+      --violet: #ba72ff;
+      --accent: linear-gradient(135deg, #3ce0ff 0%, #6e90ff 55%, #ba72ff 100%);
+      color-scheme: dark;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(72,221,255,0.10), transparent 24%),
+        radial-gradient(circle at top right, rgba(186,114,255,0.13), transparent 26%),
+        var(--bg);
+      color: var(--text);
+    }
+
+    a { color: #dff7ff; text-decoration: none; }
+    code { padding: 2px 8px; border-radius: 8px; background: rgba(255,255,255,0.08); }
+    pre {
+      margin: 0;
+      padding: 18px 20px;
+      overflow: auto;
+      border-radius: 18px;
+      background: linear-gradient(180deg, rgba(2,8,18,0.5), rgba(9,17,30,0.96));
+      color: #dff7ff;
+      line-height: 1.8;
+      font-size: 14px;
+    }
+
+    .container { width: min(1100px, calc(100% - 40px)); margin: 0 auto; }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      padding: 24px 0;
+    }
+
+    .brand { display: inline-flex; align-items: center; gap: 14px; font-weight: 700; }
+    .brand img { width: 42px; height: 42px; }
+    .brand span { font-size: 21px; }
+
+    .nav { display: flex; gap: 12px; flex-wrap: wrap; }
+    .nav a {
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+      padding: 10px 15px;
+      font-size: 14px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: 28px;
+      padding: 26px;
+      box-shadow: 0 22px 72px rgba(0,0,0,0.28);
+      backdrop-filter: blur(14px);
+    }
+
+    h1 { margin: 0 0 16px; font-size: clamp(34px, 5vw, 56px); line-height: 1.04; letter-spacing: -0.03em; }
+    h2 { margin: 0 0 16px; font-size: 28px; letter-spacing: -0.02em; }
+    h3 { margin: 0 0 12px; font-size: 22px; }
+    p, li { color: var(--muted); line-height: 1.82; }
+
+    .meta {
+      display: grid;
+      gap: 14px;
+    }
+
+    .meta-item {
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+      padding: 18px;
+    }
+
+    .meta-item strong { display: block; margin-bottom: 10px; font-size: 18px; color: #eef7ff; }
+
+    .section { margin: 18px 0; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .stack { display: grid; gap: 18px; }
+
+    .notice {
+      border-left: 4px solid #48ddff;
+      padding-left: 14px;
+      margin-top: 8px;
+    }
+
+    .kbd {
+      padding: 2px 8px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.06);
+      color: #f5fbff;
+      font-size: 13px;
+    }
+
+    .models {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .model {
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+      padding: 14px 16px;
+      color: #dff7ff;
+      font-size: 14px;
+    }
+
+    .footer {
+      margin: 30px 0 46px;
+      padding-top: 22px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      color: var(--muted);
+    }
+
+    @media (max-width: 980px) {
+      .hero, .grid, .models { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 680px) {
+      .container { width: min(100% - 24px, 1100px); }
+      .topbar { flex-direction: column; align-items: start; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="topbar">
+      <a class="brand" href="/">
+        <img src="/novamesh-mark.svg?v=2" alt="NovaMesh AI" />
+        <span>NovaMesh AI</span>
+      </a>
+      <nav class="nav">
+        <a href="/">首页</a>
+        <a href="/login">客户登录</a>
+        <a href="/register">注册</a>
+        <a href="https://api.model-port.xyz/v1/models">模型接口</a>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <div class="panel">
+        <h1>NovaMesh AI 接入文档</h1>
+        <p>
+          这份文档给首次接入的开发者和客户使用。你会在这里看到基础地址、推荐模型、示例代码、门户入口，以及常见接入注意事项。
+        </p>
+        <div class="notice">
+          <p>如果你是客户，建议先登录门户查看自己的令牌和额度；如果你是开发者，先调用 <code>/v1/models</code> 验证连通性。</p>
+        </div>
+      </div>
+      <div class="stack">
+        <div class="panel meta">
+          <div class="meta-item">
+            <strong>API Base URL</strong>
+            <p><code>https://api.model-port.xyz/v1</code></p>
+          </div>
+          <div class="meta-item">
+            <strong>客户门户</strong>
+            <p><code>https://panel.model-port.xyz</code></p>
+          </div>
+          <div class="meta-item">
+            <strong>推荐起步模型</strong>
+            <p><code>gpt-5</code>、<code>gpt-5.4</code>、<code>gpt-5-codex</code></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section grid">
+      <div class="panel">
+        <h2>接入前先确认</h2>
+        <ol>
+          <li>你已经拿到自己的 API Key，而不是管理后台密码。</li>
+          <li>客户端的 Base URL 必须填到 <code>/v1</code> 这一层，不要填到根域名，也不要填到具体接口路径。</li>
+          <li>如果你在 Windows PowerShell 里测试，优先用 <code>Invoke-RestMethod</code>，不要直接复用 Linux 的 <code>curl -H</code> 写法。</li>
+          <li>第一次联调建议先用 <code>/v1/models</code>，确认返回模型列表后再测对话接口。</li>
+        </ol>
+      </div>
+      <div class="panel">
+        <h2>推荐模型</h2>
+        <p>当前网关已暴露多组 GPT-5 系列模型，以下是最常见的起步选项。</p>
+        <div class="models">
+          <div class="model">gpt-5</div>
+          <div class="model">gpt-5.4</div>
+          <div class="model">gpt-5-codex</div>
+          <div class="model">gpt-5.4-mini</div>
+          <div class="model">gpt-5.1</div>
+          <div class="model">gpt-5.2</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section panel">
+      <h2>接口 1：列出模型</h2>
+      <div class="grid">
+        <div class="stack">
+          <div>
+            <h3>PowerShell</h3>
+            <pre>Invoke-RestMethod `
+  -Uri "https://api.model-port.xyz/v1/models" `
+  -Headers @{ Authorization = "Bearer YOUR_API_KEY" }</pre>
+          </div>
+          <div>
+            <h3>Windows CMD</h3>
+            <pre>curl.exe https://api.model-port.xyz/v1/models ^
+  -H "Authorization: Bearer YOUR_API_KEY"</pre>
+          </div>
+        </div>
+        <div class="stack">
+          <div>
+            <h3>Linux / macOS / Git Bash</h3>
+            <pre>curl https://api.model-port.xyz/v1/models \
+  -H "Authorization: Bearer YOUR_API_KEY"</pre>
+          </div>
+          <div>
+            <h3>Python</h3>
+            <pre>from openai import OpenAI
+
+client = OpenAI(
+    api_key="YOUR_API_KEY",
+    base_url="https://api.model-port.xyz/v1",
+)
+
+print(client.models.list())</pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section panel">
+      <h2>接口 2：聊天补全</h2>
+      <div class="grid">
+        <div class="stack">
+          <div>
+            <h3>PowerShell</h3>
+            <pre>$headers = @{
+  Authorization = "Bearer YOUR_API_KEY"
+  "Content-Type" = "application/json"
+}
+
+$body = @{
+  model = "gpt-5"
+  messages = @(
+    @{
+      role = "user"
+      content = "回复一句：测试成功"
+    }
+  )
+} | ConvertTo-Json -Depth 5
+
+Invoke-RestMethod `
+  -Uri "https://api.model-port.xyz/v1/chat/completions" `
+  -Method Post `
+  -Headers $headers `
+  -Body $body</pre>
+          </div>
+        </div>
+        <div class="stack">
+          <div>
+            <h3>Bash / Git Bash</h3>
+            <pre>curl https://api.model-port.xyz/v1/chat/completions \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"model":"gpt-5","messages":[{"role":"user","content":"回复一句：测试成功"}]}'</pre>
+          </div>
+          <div>
+            <h3>Python</h3>
+            <pre>from openai import OpenAI
+
+client = OpenAI(
+    api_key="YOUR_API_KEY",
+    base_url="https://api.model-port.xyz/v1",
+)
+
+resp = client.chat.completions.create(
+    model="gpt-5",
+    messages=[{"role": "user", "content": "回复一句：测试成功"}],
+)
+
+print(resp.choices[0].message.content)</pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section grid">
+      <div class="panel">
+        <h2>客户门户能做什么</h2>
+        <ul>
+          <li>查看自己的剩余额度和余额。</li>
+          <li>查看自己的令牌列表，并复制 API Key。</li>
+          <li>查看历史调用记录和消费明细。</li>
+          <li>查看你提供的模型说明和使用文档。</li>
+        </ul>
+        <p>客户门户地址：<code>https://panel.model-port.xyz</code></p>
+      </div>
+      <div class="panel">
+        <h2>常见错误</h2>
+        <ul>
+          <li><strong>无效的令牌</strong>：先确认你复制的是 API Key，不是后台账户密码。</li>
+          <li><strong>PowerShell 报 Headers 错</strong>：不要直接复用 Linux 的 curl 写法，改用上面的 PowerShell 示例。</li>
+          <li><strong>模型拉不出来</strong>：先手动填 <code>gpt-5</code> 或 <code>gpt-5.4</code> 测试，不要依赖客户端自动发现。</li>
+          <li><strong>Base URL 不通</strong>：确认填的是 <code>https://api.model-port.xyz/v1</code>，不是根域名。</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section panel">
+      <h2>编辑器和客户端配置建议</h2>
+      <p>如果你在 VS Code、OpenAI Compatible 客户端、脚本 SDK 中接入，优先使用以下模式：</p>
+      <ul>
+        <li>Provider / API Type：<code>OpenAI Compatible</code></li>
+        <li>Base URL：<code>https://api.model-port.xyz/v1</code></li>
+        <li>Model：先用 <code>gpt-5</code> 或 <code>gpt-5.4</code></li>
+        <li>API Key：使用你自己的客户令牌</li>
+      </ul>
+    </section>
+
+    <footer class="footer">
+      <div>© 2026 NovaMesh AI. Unified AI Gateway Platform.</div>
+      <div>
+        <a href="/">首页</a>
+        <span> · </span>
+        <a href="/login">客户登录</a>
+        <span> · </span>
+        <a href="https://api.model-port.xyz/v1/models">模型接口</a>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>
