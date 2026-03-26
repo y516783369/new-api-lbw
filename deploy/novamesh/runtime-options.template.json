@@ -1,0 +1,7 @@
+{
+  "SystemName": "NovaMesh AI",
+  "Logo": "/brand-logo.svg",
+  "Footer": "<div style=\"display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:center;width:100%\"><span>© 2026 NovaMesh AI. Unified AI Gateway Platform.</span><span>Secure access for your private AI workloads.</span></div>",
+  "TopUpLink": "{{PANEL_BASE}}/guide",
+  "general_setting.docs_link": "{{PANEL_BASE}}/guide"
+}
