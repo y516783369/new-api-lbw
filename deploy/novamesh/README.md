@@ -28,6 +28,12 @@ state reproducible and prevents them from being lost on the next upgrade.
   - Seeds the SQLite `options` table with NovaMesh base settings plus exported `HomePageContent` and `About`
 - `bootstrap.sh`
   - Copies branding assets and applies the runtime options in one step
+- `prepare_instance.py`
+  - Generates a fresh `compose.yml` plus rendered Caddy files for a new host
+- `prepare_instance.sh`
+  - Wrapper around `prepare_instance.py` for Linux deployment hosts
+- `api.Caddyfile.template` / `panel.Caddyfile.template`
+  - Domain-agnostic templates used for first-time provisioning
 
 ## What is intentionally not committed
 
@@ -92,6 +98,31 @@ This script will:
 3. Render domain-specific links into the stored HTML content
 
 It does not touch secrets, users, channels, tokens, or payment credentials.
+
+## First-time provisioning
+
+For a new machine, prepare the deployment skeleton first:
+
+```bash
+cd /path/to/new-api-lbw/deploy/novamesh
+./prepare_instance.sh /opt/new-api panel.example.com api.example.com /opt/new-api-bootstrap
+```
+
+This will generate:
+
+- `/opt/new-api-bootstrap/compose.yml`
+- `/opt/new-api-bootstrap/panel.example.com.Caddyfile`
+- `/opt/new-api-bootstrap/api.example.com.Caddyfile`
+
+The generated `compose.yml` contains fresh `SESSION_SECRET` and `CRYPTO_SECRET`.
+
+Recommended sequence:
+
+1. Run `prepare_instance.sh`
+2. Review the generated `compose.yml`
+3. Start `new-api` and let it create `data/one-api.db`
+4. Apply the generated Caddy files
+5. Run `bootstrap.sh` to restore NovaMesh-facing runtime options
 
 ## Notes
 

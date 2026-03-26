@@ -1,0 +1,61 @@
+{{PANEL_DOMAIN}} {
+    handle /brand-logo.svg {
+        root * {{NEW_API_ROOT}}/branding
+        file_server
+    }
+
+    handle /mesh-hero.svg {
+        root * {{NEW_API_ROOT}}/branding
+        file_server
+    }
+
+    handle /guide {
+        root * {{NEW_API_ROOT}}/branding
+        rewrite * /guide.html
+        file_server
+    }
+
+    handle /guide.html {
+        root * {{NEW_API_ROOT}}/branding
+        file_server
+    }
+
+    @app_shell path /login /login/* /register /register/* /pricing /pricing/* /about /about/* /console /console/* /topup /topup/* /personal /personal/* /token /token/*
+    handle @app_shell {
+        root * {{NEW_API_ROOT}}/branding
+        rewrite * /panel-index.html
+        file_server
+    }
+
+    handle /api/* {
+        reverse_proxy 127.0.0.1:3000 {
+            flush_interval -1
+        }
+    }
+
+    handle /assets/* {
+        reverse_proxy 127.0.0.1:3000 {
+            flush_interval -1
+        }
+    }
+
+    handle /logo.png {
+        root * {{NEW_API_ROOT}}/branding
+        rewrite * /brand-logo.svg
+        header Content-Type image/svg+xml
+        file_server
+    }
+
+    @home path /
+    handle @home {
+        root * {{NEW_API_ROOT}}/branding
+        rewrite * /landing.html
+        file_server
+    }
+
+    handle {
+        root * {{NEW_API_ROOT}}/branding
+        rewrite * /panel-index.html
+        file_server
+    }
+}

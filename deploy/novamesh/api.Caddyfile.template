@@ -1,0 +1,11 @@
+{{API_DOMAIN}} {
+    @openai_api path /v1 /v1/*
+
+    handle @openai_api {
+        reverse_proxy 127.0.0.1:3000 {
+            flush_interval -1
+        }
+    }
+
+    respond "Not Found" 404
+}
