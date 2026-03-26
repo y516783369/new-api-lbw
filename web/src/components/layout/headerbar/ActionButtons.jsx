@@ -18,6 +18,8 @@ For commercial licensing, please contact support@quantumnous.com
 */
 
 import React from 'react';
+import { Button } from '@douyinfe/semi-ui';
+import { Users } from 'lucide-react';
 import NewYearButton from './NewYearButton';
 import NotificationButton from './NotificationButton';
 import ThemeToggle from './ThemeToggle';
@@ -33,6 +35,8 @@ const ActionButtons = ({
   currentLang,
   onLanguageChange,
   userState,
+  communityLink,
+  communityLabel,
   isLoading,
   isMobile,
   isSelfUseMode,
@@ -40,9 +44,28 @@ const ActionButtons = ({
   navigate,
   t,
 }) => {
+  const showCommunityButton =
+    !!userState?.user && !!communityLink && !isLoading && !isMobile;
+
+  const openCommunityLink = () => {
+    window.open(communityLink, '_blank', 'noopener,noreferrer');
+  };
+
   return (
     <div className='flex items-center gap-2 md:gap-3'>
       <NewYearButton isNewYear={isNewYear} />
+
+      {showCommunityButton && (
+        <Button
+          theme='solid'
+          type='primary'
+          icon={<Users size={16} />}
+          onClick={openCommunityLink}
+          className='!rounded-full !px-4 !bg-blue-600 hover:!bg-blue-500 !border-0 !shadow-sm'
+        >
+          {communityLabel || '\u52a0\u5165\u4ea4\u6d41\u7fa4'}
+        </Button>
+      )}
 
       <NotificationButton
         unreadCount={unreadCount}
@@ -60,6 +83,8 @@ const ActionButtons = ({
 
       <UserArea
         userState={userState}
+        communityLink={communityLink}
+        communityLabel={communityLabel}
         isLoading={isLoading}
         isMobile={isMobile}
         isSelfUseMode={isSelfUseMode}

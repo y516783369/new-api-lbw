@@ -68,6 +68,8 @@ func InitOptionMap() {
 	common.OptionMap["Footer"] = common.Footer
 	common.OptionMap["SystemName"] = common.SystemName
 	common.OptionMap["Logo"] = common.Logo
+	common.OptionMap["CommunityLink"] = common.CommunityLink
+	common.OptionMap["CommunityLabel"] = common.CommunityLabel
 	common.OptionMap["ServerAddress"] = ""
 	common.OptionMap["WorkerUrl"] = system_setting.WorkerUrl
 	common.OptionMap["WorkerValidKey"] = system_setting.WorkerValidKey
@@ -484,6 +486,14 @@ func updateOptionMap(key string, value string) (err error) {
 		err = ratio_setting.UpdateAudioCompletionRatioByJSONString(value)
 	case "TopUpLink":
 		common.TopUpLink = value
+	case "CommunityLink":
+		common.CommunityLink = value
+	case "CommunityLabel":
+		if value == "" {
+			common.CommunityLabel = "\u52a0\u5165\u4ea4\u6d41\u7fa4"
+		} else {
+			common.CommunityLabel = value
+		}
 	//case "ChatLink":
 	//	common.ChatLink = value
 	//case "ChatLink2":

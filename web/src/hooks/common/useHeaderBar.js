@@ -50,6 +50,9 @@ export const useHeaderBar = ({ onMobileMenuToggle, drawerOpen }) => {
 
   const isSelfUseMode = statusState?.status?.self_use_mode_enabled || false;
   const docsLink = statusState?.status?.docs_link || '';
+  const communityLink = statusState?.status?.community_link || '';
+  const communityLabel =
+    statusState?.status?.community_label || '\u52a0\u5165\u4ea4\u6d41\u7fa4';
   const isDemoSiteMode = statusState?.status?.demo_site_enabled || false;
 
   // 获取顶栏模块配置
@@ -232,6 +235,8 @@ export const useHeaderBar = ({ onMobileMenuToggle, drawerOpen }) => {
     isNewYear,
     isSelfUseMode,
     docsLink,
+    communityLink,
+    communityLabel,
     isDemoSiteMode,
     isConsoleRoute,
     theme,
