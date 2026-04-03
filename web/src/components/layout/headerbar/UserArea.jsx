@@ -20,7 +20,7 @@ For commercial licensing, please contact support@quantumnous.com
 import React, { useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Avatar, Button, Dropdown, Typography } from '@douyinfe/semi-ui';
-import { ChevronDown, Users } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 import {
   IconExit,
   IconUserSetting,
@@ -32,8 +32,6 @@ import SkeletonWrapper from '../components/SkeletonWrapper';
 
 const UserArea = ({
   userState,
-  communityLink,
-  communityLabel,
   isLoading,
   isMobile,
   isSelfUseMode,
@@ -42,11 +40,6 @@ const UserArea = ({
   t,
 }) => {
   const dropdownRef = useRef(null);
-
-  const openCommunityLink = () => {
-    window.open(communityLink, '_blank', 'noopener,noreferrer');
-  };
-
   if (isLoading) {
     return (
       <SkeletonWrapper
@@ -77,7 +70,7 @@ const UserArea = ({
                     size='small'
                     className='text-gray-500 dark:text-gray-400'
                   />
-                  <span>{t('\u4e2a\u4eba\u8bbe\u7f6e')}</span>
+                  <span>{t('个人设置')}</span>
                 </div>
               </Dropdown.Item>
               <Dropdown.Item
@@ -91,7 +84,7 @@ const UserArea = ({
                     size='small'
                     className='text-gray-500 dark:text-gray-400'
                   />
-                  <span>{t('\u4ee4\u724c\u7ba1\u7406')}</span>
+                  <span>{t('令牌管理')}</span>
                 </div>
               </Dropdown.Item>
               <Dropdown.Item
@@ -105,25 +98,9 @@ const UserArea = ({
                     size='small'
                     className='text-gray-500 dark:text-gray-400'
                   />
-                  <span>{t('\u94b1\u5305\u7ba1\u7406')}</span>
+                  <span>{t('钱包管理')}</span>
                 </div>
               </Dropdown.Item>
-              {communityLink && (
-                <Dropdown.Item
-                  onClick={openCommunityLink}
-                  className='!px-3 !py-1.5 !text-sm !text-semi-color-text-0 hover:!bg-semi-color-fill-1 dark:!text-gray-200 dark:hover:!bg-blue-500 dark:hover:!text-white'
-                >
-                  <div className='flex items-center gap-2'>
-                    <Users
-                      size={16}
-                      className='text-gray-500 dark:text-gray-400'
-                    />
-                    <span>
-                      {communityLabel || '\u52a0\u5165\u4ea4\u6d41\u7fa4'}
-                    </span>
-                  </div>
-                </Dropdown.Item>
-              )}
               <Dropdown.Item
                 onClick={logout}
                 className='!px-3 !py-1.5 !text-sm !text-semi-color-text-0 hover:!bg-semi-color-fill-1 dark:!text-gray-200 dark:hover:!bg-red-500 dark:hover:!text-white'
@@ -133,7 +110,7 @@ const UserArea = ({
                     size='small'
                     className='text-gray-500 dark:text-gray-400'
                   />
-                  <span>{t('\u9000\u51fa')}</span>
+                  <span>{t('退出')}</span>
                 </div>
               </Dropdown.Item>
             </Dropdown.Menu>
@@ -164,58 +141,60 @@ const UserArea = ({
         </Dropdown>
       </div>
     );
-  }
-
-  const showRegisterButton = !isSelfUseMode;
-  const commonSizingAndLayoutClass =
-    'flex items-center justify-center !py-[10px] !px-1.5';
-  const loginButtonSpecificStyling =
-    '!bg-semi-color-fill-0 dark:!bg-semi-color-fill-1 hover:!bg-semi-color-fill-1 dark:hover:!bg-gray-700 transition-colors';
-  let loginButtonClasses = `${commonSizingAndLayoutClass} ${loginButtonSpecificStyling}`;
-  let registerButtonClasses = `${commonSizingAndLayoutClass}`;
-  const loginButtonTextSpanClass =
-    '!text-xs !text-semi-color-text-1 dark:!text-gray-300 !p-1.5';
-  const registerButtonTextSpanClass = '!text-xs !text-white !p-1.5';
-
-  if (showRegisterButton) {
-    if (isMobile) {
-      loginButtonClasses += ' !rounded-full';
-    } else {
-      loginButtonClasses += ' !rounded-l-full !rounded-r-none';
-    }
-    registerButtonClasses += ' !rounded-r-full !rounded-l-none';
   } else {
-    loginButtonClasses += ' !rounded-full';
-  }
+    const showRegisterButton = !isSelfUseMode;
 
-  return (
-    <div className='flex items-center'>
-      <Link to='/login' className='flex'>
-        <Button
-          theme='borderless'
-          type='tertiary'
-          className={loginButtonClasses}
-        >
-          <span className={loginButtonTextSpanClass}>{t('\u767b\u5f55')}</span>
-        </Button>
-      </Link>
-      {showRegisterButton && (
-        <div className='hidden md:block'>
-          <Link to='/register' className='flex -ml-px'>
-            <Button
-              theme='solid'
-              type='primary'
-              className={registerButtonClasses}
-            >
-              <span className={registerButtonTextSpanClass}>
-                {t('\u6ce8\u518c')}
-              </span>
-            </Button>
-          </Link>
-        </div>
-      )}
-    </div>
-  );
+    const commonSizingAndLayoutClass =
+      'flex items-center justify-center !py-[10px] !px-1.5';
+
+    const loginButtonSpecificStyling =
+      '!bg-semi-color-fill-0 dark:!bg-semi-color-fill-1 hover:!bg-semi-color-fill-1 dark:hover:!bg-gray-700 transition-colors';
+    let loginButtonClasses = `${commonSizingAndLayoutClass} ${loginButtonSpecificStyling}`;
+
+    let registerButtonClasses = `${commonSizingAndLayoutClass}`;
+
+    const loginButtonTextSpanClass =
+      '!text-xs !text-semi-color-text-1 dark:!text-gray-300 !p-1.5';
+    const registerButtonTextSpanClass = '!text-xs !text-white !p-1.5';
+
+    if (showRegisterButton) {
+      if (isMobile) {
+        loginButtonClasses += ' !rounded-full';
+      } else {
+        loginButtonClasses += ' !rounded-l-full !rounded-r-none';
+      }
+      registerButtonClasses += ' !rounded-r-full !rounded-l-none';
+    } else {
+      loginButtonClasses += ' !rounded-full';
+    }
+
+    return (
+      <div className='flex items-center'>
+        <Link to='/login' className='flex'>
+          <Button
+            theme='borderless'
+            type='tertiary'
+            className={loginButtonClasses}
+          >
+            <span className={loginButtonTextSpanClass}>{t('登录')}</span>
+          </Button>
+        </Link>
+        {showRegisterButton && (
+          <div className='hidden md:block'>
+            <Link to='/register' className='flex -ml-px'>
+              <Button
+                theme='solid'
+                type='primary'
+                className={registerButtonClasses}
+              >
+                <span className={registerButtonTextSpanClass}>{t('注册')}</span>
+              </Button>
+            </Link>
+          </div>
+        )}
+      </div>
+    );
+  }
 };
 
 export default UserArea;

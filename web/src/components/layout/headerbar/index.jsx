@@ -41,8 +41,6 @@ const HeaderBar = ({ onMobileMenuToggle, drawerOpen }) => {
     isNewYear,
     isSelfUseMode,
     docsLink,
-    communityLink,
-    communityLabel,
     isDemoSiteMode,
     isConsoleRoute,
     theme,
@@ -118,8 +116,6 @@ const HeaderBar = ({ onMobileMenuToggle, drawerOpen }) => {
             currentLang={currentLang}
             onLanguageChange={handleLanguageChange}
             userState={userState}
-            communityLink={communityLink}
-            communityLabel={communityLabel}
             isLoading={isLoading}
             isMobile={isMobile}
             isSelfUseMode={isSelfUseMode}

@@ -16,8 +16,6 @@ var SystemName = "New API"
 var Footer = ""
 var Logo = ""
 var TopUpLink = ""
-var CommunityLink = ""
-var CommunityLabel = "\u52a0\u5165\u4ea4\u6d41\u7fa4"
 
 // var ChatLink = ""
 // var ChatLink2 = ""

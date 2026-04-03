@@ -511,11 +511,11 @@ func getHardcodedCompletionModelRatio(name string) (float64, bool) {
 		if strings.HasPrefix(name, "gpt-5") {
 			if strings.HasPrefix(name, "gpt-5.4") {
 				if strings.HasPrefix(name, "gpt-5.4-nano") {
-					return 6.25, true
+					return 6.25, false
 				}
-				return 6, true
+				return 6, false
 			}
-			return 8, true
+			return 8, false
 		}
 		// gpt-4.5-preview匹配
 		if strings.HasPrefix(name, "gpt-4.5-preview") {
